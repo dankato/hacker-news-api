@@ -1,28 +1,59 @@
-'use strict';
+'use strict'; 
 
-// grab our dependencies
+const express = require('express');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
-    //  Express (calls middleware to process requests and responses
-    const express = require('express');
-        // Create the app
-        const app = express();
+const { DATABASE, PORT } = require('./config');
 
-    //  Morgan, HTTP request logger middleware for node.js
-    const morgan = require('morgan')
+const app = express();
 
-// configure our app
+app.use(morgan(':method :url :res[location] :status'));
 
+app.use(bodyParser.json());
 
-// set routes
-    app.get('/', (req, res) => {
-        res.send('hello, im the app');
+app.get('/', (req, res) => {
+  res.send('hello world');
+});
+// ADD ENDPOINTS HERE
+
+let server;
+let knex;
+function runServer(database = DATABASE, port = PORT) {
+  return new Promise((resolve, reject) => {
+    try {
+      knex = require('knex')(database);
+      server = app.listen(port, () => {
+        console.info(`App listening on port ${server.address().port}`);
+        resolve();
+      });
+    }
+    catch (err) {
+      console.error(`Can't start server: ${err}`);
+      reject(err);
+    }
+  });
+}
+
+function closeServer() {
+  return knex.destroy().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log('Closing servers');
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
     });
+  });
+}
 
+if (require.main === module) {
+  runServer().catch(err => {
+    console.error(`Can't start server: ${err}`);
+    throw err;
+  });
+}
 
-// start server
-    app.listen(process.env.PORT || 8080, () => {
-        console.log(`App is listening on port ${process.env.PORT || 8080}`);
-    });
-
-
-// TEST EACH STEP
+module.exports = { app, runServer, closeServer };
