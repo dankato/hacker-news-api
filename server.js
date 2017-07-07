@@ -30,7 +30,7 @@ app.post('/api/stories', jsonParser, (req, res) => {
   }
 
   const item = news.create(req.body.title, req.body.url);
-  res.status(201).json(item);
+  res.status(201).json(item);;
 });
 
 // Sending a votes property should not allow users to cheat the system by setting an arbitrary number of upvotes
