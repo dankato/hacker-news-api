@@ -1,4 +1,4 @@
-const DATABASE_URL = process.env.DATABASE_URL || global.DATABASE_URL || 'postgresql://localhost/hacker-news-api';
+const DATABASE_URL = process.env.DATABASE_URL || global.DATABASE_URL || 'postgres://ikqipnsg:Sl_j_HtbHVTOjEXmBk9VYza5EWqqI9wn@pellefant.db.elephantsql.com:5432/ikqipnsg';
 
 exports.DATABASE = {
   client: 'pg',
@@ -7,4 +7,4 @@ exports.DATABASE = {
   debug: true
 };
 
-exports.PORT = process.env.PORT || 8080; 
+exports.PORT = process.env.PORT || 8080;
