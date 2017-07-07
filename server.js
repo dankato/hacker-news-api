@@ -59,6 +59,8 @@ app.post('/api/stories', jsonParser, (req, res) => {
       res.status(201).json(result);
     })
     .catch(err => res.status(500).json(err));
+
+  res.set('Location', req.body.url);
 });
 
 // Sending a votes property should not allow users to cheat the system by setting an arbitrary number of upvotes
