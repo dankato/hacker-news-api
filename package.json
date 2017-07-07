@@ -1,0 +1,26 @@
+{
+  "name": "hacker-news-api",
+  "version": "1.0.0",
+  "description": "7/7 server and test-server for Hacker News API project with kristoffer",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dankato/hacker-news-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dankato/hacker-news-api/issues"
+  },
+  "homepage": "https://github.com/dankato/hacker-news-api#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "knex": "^0.13.0",
+    "morgan": "^1.8.2",
+    "pg": "^6.4.0"
+  }
+}
