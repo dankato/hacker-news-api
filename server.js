@@ -15,7 +15,30 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('hello world');
 });
-// ADD ENDPOINTS HERE
+
+// POST ENDPOINT
+app.post('/api/stories', jsonParser, (req, res) => {
+  // ensure `title` and `url` are in request body
+  const requiredFields = ['title', 'url'];
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+
+  const item = news.create(req.body.title, req.body.url);
+  res.status(201).json(item);
+});
+
+// Sending a votes property should not allow users to cheat the system by setting an arbitrary number of upvotes
+
+
+
+// PUT ENDPOINT
+
 
 let server;
 let knex;
