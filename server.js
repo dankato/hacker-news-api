@@ -16,28 +16,21 @@ app.use(morgan(':method :url :res[location] :status'));
 
 const jsonParser = bodyParser.json();
 
+// CORS Enabled
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  next();
+});
+
+// GET ENDPOINT
 app.get('/', (req, res) => {
   knex.select()
     .from('news')
     .then(res => console.log(res));
-
-  res.send('hello world');
+  res.send('i get stuff but look in your command line');
 }); 
-
-// Create a POST endpoint, /api/stories, which adds new stories to your database.
-// It should expect a JSON request body containing a title property and a url property
-// It should respond with a 201 Created status and the story ////
-  // The submitted title, URL and the new ID should come back
-  // Plus the URL should be in the location header
-// Sending a votes property should not allow users to cheat the system by setting an arbitrary number of upvotes
-// Test your endpoint by:
-// Using Postman to add some stories
-// Using the shell to make sure they were added to the database
-
-// psql postgres://ikqipnsg:Sl_j_HtbHVTOjEXmBk9VYza5EWqqI9wn@pellefant.db.elephantsql.com:5432/ikqipnsg
-// server pellefant.db.elephantsql.com
-// user/database ikqipnsg
-// password Sl_j_HtbHVTOjEXmBk9VYza5EWqqI9wn
 
 // POST ENDPOINT
 app.post('/api/stories', jsonParser, (req, res) => {
@@ -51,7 +44,6 @@ app.post('/api/stories', jsonParser, (req, res) => {
       return res.status(400).send(message);
     }
   }
-
   knex('news')
     .insert({'title': req.body.title, 'url': req.body.url})
     .returning(['id','title', 'url', 'votes'])
@@ -63,12 +55,23 @@ app.post('/api/stories', jsonParser, (req, res) => {
   res.set('Location', req.body.url);
 });
 
-// Sending a votes property should not allow users to cheat the system by setting an arbitrary number of upvotes
-
-
-
 // PUT ENDPOINT
+app.put('/api/stories/:id', jsonParser, (req, res) => {
+  knex('news')
+    .where('id', req.params.id)
+    .increment('votes', 1)
+    .then(() => res.sendStatus(200))
+    .catch(err => res.status(500).json(err));
+});
 
+// DELETE ENDPOINT
+app.delete('/api/stories/:id', (req, res) => {
+  knex('news')
+    .where('id', req.params.id)
+    .del()
+    .then(() => res.sendStatus(204))
+    .catch(err => res.status(500).json(err));
+});
 
 let server;
 // let knex;
